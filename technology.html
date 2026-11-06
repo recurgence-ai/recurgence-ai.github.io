@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>技术 · 大脑、神经与身体 · 循驭智能</title>
+<meta name="description" content="循驭智能全栈开源机器人技术：Octos 智能体运行时、DORA 数据流内核、PhyWorld 物理世界模型与 PhyGround 评测闭环、Nexus 仿真与数据管线，以及国产开源软件底座。">
+<meta name="theme-color" content="#08151f">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="循驭智能">
+<meta property="og:title" content="技术 · 大脑、神经与身体 · 循驭智能">
+<meta property="og:description" content="循驭智能全栈开源机器人技术：Octos 智能体运行时、DORA 数据流内核、PhyWorld 物理世界模型与 PhyGround 评测闭环、Nexus 仿真与数据管线，以及国产开源软件底座。">
+<meta property="og:image" content="https://xunyu-ai.github.io/assets/img/og-cover.jpg">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol><symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.2 4.2L19 7"/></symbol><symbol id="i-brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M12 5a3 3 0 0 0-5.6 1.4A3 3 0 0 0 4.5 11a3 3 0 0 0 1.2 4.6A3 3 0 0 0 12 19"/><path d="M12 5a3 3 0 0 1 5.6 1.4A3 3 0 0 1 19.5 11a3 3 0 0 1-1.2 4.6A3 3 0 0 1 12 19"/></symbol><symbol id="i-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 6h3a3 3 0 0 1 3 3 3 3 0 0 0 3 3h1M7 18h3a3 3 0 0 0 3-3 3 3 0 0 1 3-3"/></symbol><symbol id="i-robot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="8" width="14" height="10" rx="2"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1"/><circle cx="9.5" cy="13" r="1.2"/><circle cx="14.5" cy="13" r="1.2"/><path d="M3 12v3M21 12v3"/></symbol><symbol id="i-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M10 7V4M14 7V4M10 20v-3M14 20v-3M7 10H4M7 14H4M20 10h-3M20 14h-3"/></symbol><symbol id="i-wave" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 9a14 14 0 0 1 19 0"/><path d="M5.5 12.2a10 10 0 0 1 13 0"/><path d="M8.5 15.4a5.5 5.5 0 0 1 7 0"/><circle cx="12" cy="18.6" r="1"/></symbol><symbol id="i-cube" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></symbol><symbol id="i-loop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4.5M4 13a8 8 0 0 0 14.5 4.5"/><path d="M5 3v4h4M19 21v-4h-4"/></symbol><symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></symbol><symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></symbol><symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/></symbol><symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14.2A5 5 0 0 1 21 19"/></symbol><symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v5M15 3v5M7 8h10v3a5 5 0 0 1-10 0V8zM12 16v5"/></symbol><symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 19a2 2 0 0 1 2-2h13"/></symbol><symbol id="i-factory" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V10l6 4V10l6 4V6h6v15H3z"/><path d="M7 17h2M12 17h2M17 17h1"/></symbol><symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><path d="M10 6.5h4a3 3 0 0 1 3 3V14"/></symbol><symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol><symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol><symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></symbol><symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4V5z"/><path d="M8 9.5h8M8 12.5h5"/></symbol><symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol><symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5l11 7-11 7V5z"/></symbol><symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></symbol><symbol id="i-gauge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18a8 8 0 1 1 16 0"/><path d="M12 18l4-6"/></symbol><symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 9h16M9 9v11"/></symbol><symbol id="i-film" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3V9z"/></symbol><symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol><symbol id="i-flask" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5.5 9.5A1.6 1.6 0 0 0 5.9 21h12.2a1.6 1.6 0 0 0 1.4-2.5L14 9V3"/><path d="M7.5 15h9"/></symbol><symbol id="i-github" viewBox="0 0 16 16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></symbol></svg>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="循驭智能 首页"><svg class="brand-mark" viewBox="0 0 36 36" aria-hidden="true"><rect width="36" height="36" rx="9" fill="#008E88"/><path d="M26.4 14.2A9 9 0 1 0 27 20" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><path d="M27.6 9.2v5.6H22" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="18" r="3.4" fill="#fff"/></svg><span class="brand-text"><strong>循驭智能</strong><span>RECURGENCE.AI</span></span></a>
+    <nav class="nav" aria-label="主导航"><a href="products.html">产品</a><a href="technology.html" aria-current="page">技术</a><a href="solutions.html">解决方案</a><a href="community.html">开源社区</a><a href="about.html">关于我们</a></nav>
+    <div class="header-cta">
+      <a class="btn btn-primary" href="contact.html">预约演示</a>
+      <button class="menu-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-nav"><svg><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+<nav class="mobile-nav" id="mobile-nav" aria-label="移动端导航">
+  <a href="index.html">首页</a><a href="products.html">产品</a><a href="technology.html" aria-current="page">技术</a><a href="solutions.html">解决方案</a><a href="community.html">开源社区</a><a href="about.html">关于我们</a>
+  <a class="btn btn-primary" href="contact.html">预约演示</a>
+</nav>
+<main id="main">
+<section class="page-hero dark">
+  <div class="grid-bg"></div>
+  <div class="wrap reveal">
+    <div class="eyebrow">Technology</div>
+    <h1 class="h1">大脑 · 神经 · 身体<br>全栈开源的机器人技术</h1>
+    <p class="lead">Model + Octos = Agentic 大脑；DORA 是神经；ADORA 是身体。适应新环境，靠智能体改写编排代码，而不是为每个场景重新训练。</p>
+    <div class="anchors">
+      <a href="#octos">Octos 智能体</a><a href="#dora">DORA 内核</a><a href="#phyworld">PhyWorld 世界模型</a>
+      <a href="#ecosystem">国产底座</a><a href="#nexus">Nexus 仿真与数据</a><a href="#roadmap">技术路线</a>
+    </div>
+  </div>
+</section>
+
+<section class="section dark" style="padding-top:0">
+  <div class="wrap split">
+    <div class="reveal">
+      <div class="eyebrow">Architecture</div>
+      <h2 class="h2">智能体驱动的全栈协同</h2>
+      <p class="lead" style="margin-top:20px">大脑负责理解与规划，神经负责把指令变成实时、可靠的数据流，身体负责感知和执行。三层之间形成"感知—控制—反馈"的闭环。</p>
+      <ul class="bullets">
+        <li><svg><use href="#i-check"/></svg><div><b>换场景不重训</b><span>智能体改编排代码，复用已有技能</span></div></li>
+        <li><svg><use href="#i-check"/></svg><div><b>换本体不重写</b><span>DORA 屏蔽硬件差异，技能跨机型迁移</span></div></li>
+        <li><svg><use href="#i-check"/></svg><div><b>每层都开源</b><span>可以单独使用，也可以整套交付</span></div></li>
+      </ul>
+    </div>
+    <div class="loop-diagram reveal">
+      <div class="loop-node">
+        <div class="t"><b>大脑</b><span>Agentic = Model + Harness</span></div>
+        <p>Octos 编程智能体核心 · 大脑模型（WAM · Moxin）</p>
+      </div>
+      <div class="loop-link"><span><svg style="transform:rotate(90deg)"><use href="#i-arrow"/></svg>控制</span><span><svg style="transform:rotate(-90deg)"><use href="#i-arrow"/></svg>感知</span></div>
+      <div class="loop-node">
+        <div class="t"><b>神经</b><span>DORA</span></div>
+        <p>机器人技能：视觉 · 导航 · 抓取，毫秒级数据流调度</p>
+      </div>
+      <div class="loop-link"><span><svg style="transform:rotate(90deg)"><use href="#i-arrow"/></svg>控制</span><span><svg style="transform:rotate(-90deg)"><use href="#i-arrow"/></svg>反馈</span></div>
+      <div class="loop-node">
+        <div class="t"><b>身体</b><span>Sensors + Actuators</span></div>
+        <p>ADORA 整机，以及宇树、智元等第三方本体</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="octos">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="eyebrow">Agent Runtime</div>
+        <h2 class="h2">Octos：智能体 OS，<br>机器人大脑的 Harness</h2>
+      </div>
+      <p class="lead">模型提供智能，Octos 提供自主运行时。我们把成熟的智能体 OS（AgentOS）移植到具身机器人——让大脑真正能自主运行、试错、演进。</p>
+    </div>
+    <div class="feature-grid reveal-stagger">
+      <div class="feature"><div class="ico"><svg><use href="#i-loop"/></svg></div><h3>Agent Loop</h3><p>推理 → 动作 → 观测，自主闭环运行。</p></div>
+      <div class="feature"><div class="ico"><svg><use href="#i-box"/></svg></div><h3>工具 + 沙箱</h3><p>统一工具注册、隔离执行，在动作层设置安全边界。</p></div>
+      <div class="feature"><div class="ico"><svg><use href="#i-spark"/></svg></div><h3>记忆 + 技能库</h3><p>成功的编排沉淀为可复用技能，跨机型迁移。</p></div>
+      <div class="feature"><div class="ico"><svg><use href="#i-users"/></svg></div><h3>多智体 Swarm</h3><p>多台真机协作，择优演进。</p></div>
+      <div class="feature"><div class="ico"><svg><use href="#i-plug"/></svg></div><h3>MCP 双向</h3><p>经 octos-dora-mcp 对接 DORA，也可调用外部工具。</p></div>
+      <div class="feature"><div class="ico"><svg><use href="#i-eye"/></svg></div><h3>多端交互</h3><p>终端 octos-tui、Web 与 TUI 三端，开发者熟悉的编码智能体体验。</p></div>
+    </div>
+    <div class="btn-row reveal">
+      <a class="btn btn-outline" href="https://github.com/octos-org" target="_blank" rel="noopener"><svg><use href="#i-github"/></svg>octos-org</a>
+    </div>
+    
+  </div>
+</section>
+
+<section class="section dark" id="dora">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="eyebrow">Robot Runtime</div>
+        <h2 class="h2">DORA 内核：<br>机器人的神经系统</h2>
+      </div>
+      <p class="lead">DORA（Dataflow-Oriented Robotic Architecture）用有向图描述机器人应用：节点即进程，YAML 声明，无需代码生成。团队成员是 DORA 的核心贡献者。</p>
+    </div>
+    <div class="stats reveal-stagger">
+      <div class="stat"><div class="v">10–17<sup>×</sup></div><div class="k">比 ROS 2 更快</div><div class="d">项目报告值</div></div>
+      <div class="stat"><div class="v">~500<sup>μs</sup></div><div class="k">共享内存 p50</div><div class="d">同机零拷贝</div></div>
+      <div class="stat"><div class="v">4</div><div class="k">种通信模式</div><div class="d">Topic / Service / Action / Streaming</div></div>
+      <div class="stat"><div class="v">60<sup>+</sup></div><div class="k">官方节点</div><div class="d">dora Hub</div></div>
+    </div>
+    <div class="feature-grid reveal-stagger" style="margin-top:56px">
+      <div class="feature"><div class="ico"><svg><use href="#i-flow"/></svg></div><h3>数据流模型</h3><p>有向图 pipeline，节点即进程，YAML 声明，无需代码生成。</p></div>
+      <div class="feature"><div class="ico"><svg><use href="#i-gauge"/></svg></div><h3>零拷贝 + Apache Arrow</h3><p>同机共享内存，跨机走 Zenoh，序列化开销降到零。</p></div>
+      <div class="feature"><div class="ico"><svg><use href="#i-layers"/></svg></div><h3>多语言原生</h3><p>Rust / Python / C / C++ 节点在同一数据流里自由混用。</p></div>
+      <div class="feature"><div class="ico"><svg><use href="#i-link"/></svg></div><h3>四种通信模式</h3><p>Topic、Service、Action、Streaming，覆盖从传感器到长任务。</p></div>
+      <div class="feature"><div class="ico"><svg><use href="#i-film"/></svg></div><h3>工程内建</h3><p>容错重启、录制回放、可观测性、集群管理与 Node Hub。</p></div>
+      <div class="feature"><div class="ico"><svg><use href="#i-plug"/></svg></div><h3>生态兼容</h3><p>ROS 2 / MAVLink 桥接，吸纳既有生态，迁移成本更低。</p></div>
+    </div>
+    <div class="btn-row reveal">
+      <a class="btn btn-ghost" href="https://github.com/dora-rs/dora" target="_blank" rel="noopener"><svg><use href="#i-github"/></svg>dora-rs/dora</a>
+      <a class="btn btn-ghost" href="https://dora-rs.ai" target="_blank" rel="noopener">dora-rs.ai<svg><use href="#i-ext"/></svg></a>
+    </div>
+    <p class="footnote">性能数据为项目报告值，实际结果因硬件与负载而异。</p>
+  </div>
+</section>
+
+<section class="section navy" id="phyworld">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="eyebrow">Physical World Model</div>
+        <h2 class="h2">PhyWorld：<br>为世界模型加上物理约束</h2>
+      </div>
+      <p class="lead">世界模型让机器人在物理正确的想象里试错学习。配合 WAM 世界动作模型，从想象物理到输出动作，补齐 VLA 的空间与物理短板。</p>
+    </div>
+    <div class="split" style="align-items:start">
+      <div class="reveal">
+        <ul class="bullets" style="margin-top:0">
+          <li><svg><use href="#i-check"/></svg><div><b>两阶段后训练</b><span>流匹配物理一致性 + DPO 物理强化（rank-16 LoRA · 千组人评偏好）</span></div></li>
+          <li><svg><use href="#i-check"/></svg><div><b>覆盖 7 类物理事件</b><span>碰撞回弹 · 破坏形变 · 流体 · 光影反射 · 连锁反应 · 滚动滑动 · 抛体</span></div></li>
+          <li><svg><use href="#i-check"/></svg><div><b>VBench 生成质量 0.769</b><span>高于 NVIDIA Cosmos-14B 的 0.753</span></div></li>
+          <li><svg><use href="#i-check"/></svg><div><b>PhyGround 物理保真 3.09</b><span>高于最强基线 2.99，光学物理领先</span></div></li>
+          <li><svg><use href="#i-check"/></svg><div><b>模型、基准、裁判全部开源</b><span>Hugging Face · Apache 2.0</span></div></li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn btn-ghost" href="https://huggingface.co/NU-World-Model-Embodied-AI" target="_blank" rel="noopener">Hugging Face<svg><use href="#i-ext"/></svg></a>
+          <a class="btn btn-ghost" href="https://arxiv.org/abs/2605.10806" target="_blank" rel="noopener">PhyGround 论文<svg><use href="#i-ext"/></svg></a>
+        </div>
+        
+      </div>
+      <div class="reveal">
+        <div class="cycle">
+          <div class="step"><div class="n">01</div><h3>PhyWorld 生成</h3><p>物理保真视频世界模型</p></div>
+          <div class="step"><div class="n">02</div><h3>PhyJudge-9B <span class="nw">评判</span></h3><p>视觉-语言裁判模型，自动为物理保真打分</p></div>
+          <div class="step"><div class="n">04</div><h3>DPO 物理强化</h3><p>用偏好数据回训，改进 PhyWorld，回到第一步</p></div>
+          <div class="step"><div class="n">03</div><h3>PhyGround 基准</h3><p>250 条提示 · 13 条物理定律 · 约 4,500 条人工标注</p></div>
+          <div class="core"><svg><use href="#i-loop"/></svg>评测闭环：生成 → 评判 → 基准 → 回训</div>
+        </div>
+        <p class="footnote">模型 + 基准 + 裁判形成闭环：物理保真可度量、可回训、可持续进化。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="ecosystem">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="eyebrow">Open Ecosystem</div>
+        <h2 class="h2">机器人的<br>国产开源软件底座</h2>
+      </div>
+      <p class="lead">DORA 致力于成为机器人这一层的开源操作系统：上承 ADORA 整机与机器人应用，下接国产算力、操作系统与通信。</p>
+    </div>
+    <div class="feature-grid cols-4 reveal-stagger">
+      <div class="feature"><div class="ico"><svg><use href="#i-chip"/></svg></div><h3>昇腾 Ascend 910 / 310</h3><p>OminiX 推理引擎全面支持，本地运行 Moxin 大模型。</p></div>
+      <div class="feature"><div class="ico"><svg><use href="#i-shield"/></svg></div><h3>OpenAtom 托管</h3><p>中立治理、开源可信。</p></div>
+      <div class="feature"><div class="ico"><svg><use href="#i-layers"/></svg></div><h3>OpenHarmony 集成</h3><p>运行于鸿蒙生态设备，共享分布式软总线。</p></div>
+      <div class="feature"><div class="ico"><svg><use href="#i-wave"/></svg></div><h3>NearLink 星闪</h3><p>国产短距无线，低延迟、高并发的机内与多机协同通信。</p></div>
+    </div>
+    
+    <blockquote class="reveal" style="margin:48px 0 0;padding:28px 32px;border-radius:10px;background:var(--paper);font-size:18px;line-height:1.8">
+      新华社（2026-06）报道：基于开源鸿蒙的 M-Robots 机器人 OS（开放原子基金会孵化）兼容 DORA 等主流中间件，迁移成本降低 80%。
+      
+    </blockquote>
+  </div>
+</section>
+
+<section class="section paper" id="nexus">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="eyebrow">Data Strategy</div>
+        <h2 class="h2">复用开源数据，<br>重点建设生成能力</h2>
+      </div>
+      <p class="lead">Robot、UMI、Ego 数据充分利用开源社区；我们集中力量，基于 Nexus 构建仿真与合成数据管线。</p>
+    </div>
+    <div class="data-split reveal-stagger">
+      <div class="data-col">
+        <div class="eyebrow" style="margin:0">01 · 充分利用开源社区</div>
+        <h3>真实世界数据</h3>
+        <div class="light-chips" style="display:flex;flex-wrap:wrap;gap:8px"><span class="chip">Robot Data <em>机器人操作</em></span><span class="chip">UMI Data <em>手持示教</em></span><span class="chip">Ego Data <em>第一视角</em></span></div>
+        <p class="small" style="margin-top:18px">筛选高质量数据 → 格式与任务对齐 → 接入训练</p>
+      </div>
+      <div class="data-col hl">
+        <div class="eyebrow" style="margin:0">02 · 我们的建设重点</div>
+        <h3>仿真与合成数据</h3>
+        <div class="light-chips" style="display:flex;flex-wrap:wrap;gap:8px"><span class="chip hl">Simulation Data <em>仿真轨迹、状态与动作</em></span><span class="chip hl">General Data <em>合成扩充通用训练集</em></span></div>
+        <p class="small" style="margin-top:18px">基于 Nexus 的仿真与合成数据流水线</p>
+      </div>
+    </div>
+
+    <div class="split" style="margin-top:clamp(72px,9vw,120px)">
+      <div class="reveal">
+        <div class="eyebrow">Nexus · Training Workbench</div>
+        <h2 class="h2">把仿真与训练<br>变成可复现实验</h2>
+        <p class="lead" style="margin-top:20px">基于 dimforge/nexus 开源引擎（Rust + WebGPU 多物理场），建设面向教学科研与机器人竞赛的仿真、数据生成与训练工作台。</p>
+        <ul class="bullets">
+          <li><svg><use href="#i-check"/></svg><div><b>01 配置实验</b><span>选模型 · 配参数，保留模型来源与实验配置</span></div></li>
+          <li><svg><use href="#i-check"/></svg><div><b>02 训练与回放</b><span>看反馈 · 查运行记录，关联训练反馈、动作与运行记录</span></div></li>
+          <li><svg><use href="#i-check"/></svg><div><b>03 验证与复盘</b><span>批量测试，Octos 助手查记录、比运行，由人决定下一次实验</span></div></li>
+        </ul>
+        <p class="small" style="margin-top:20px">Rust + GPU 仿真 · Makepad UI · 仿真与控制台同进程</p>
+      </div>
+      <div class="media reveal"><img src="assets/img/tech/nexus-training-ui.webp" alt="Nexus 训练工作台界面" loading="lazy"></div>
+    </div>
+
+    <div class="table-scroll reveal" style="margin-top:56px">
+      <table class="compare" style="min-width:0">
+        <thead><tr><th>平台</th><th>主要定位</th></tr></thead>
+        <tbody>
+          <tr class="ours"><td>Nexus（循驭）</td><td>教学 / 竞赛实验工作台</td></tr>
+          <tr><td>Isaac Lab</td><td>机器人学习框架</td></tr>
+          <tr><td>MuJoCo / MJX</td><td>物理仿真与加速计算</td></tr>
+          <tr><td>Genesis</td><td>通用多物理仿真平台</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="footnote">定位对比，不代表性能、物理精度或功能比较。Nexus 引擎：github.com/dimforge/nexus</p>
+  </div>
+</section>
+
+<section class="section dark" id="roadmap">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="eyebrow">Roadmap</div>
+        <h2 class="h2">全栈开源路线</h2>
+      </div>
+      <p class="lead">从已完成的基线出发，走向大脑、神经、身体全栈打通的开源机器人标准。</p>
+    </div>
+    <div class="roadmap reveal-stagger">
+      <div class="rm-col done">
+        <div class="phase">Baseline</div><h3>已完成基线</h3>
+        <ul>
+          <li><b>大脑：</b>PhyWorld 物理世界模型 + PhyGround 基准 + PhyJudge-9B 裁判</li>
+          <li>全套开源 · WAM 世界动作模型</li>
+          <li><b>神经 + 身体：</b>Octos + DORA 已在智元 X2 人形真机端到端跑通</li>
+        </ul>
+      </div>
+      <div class="rm-col">
+        <div class="phase">Near Term</div><h3>近期</h3>
+        <ul>
+          <li><b>大脑：</b>世界模型上端侧 · WAM 上机</li>
+          <li><b>神经：</b>DORA 1.0 · OpenAtom 托管</li>
+          <li><b>身体：</b>开源 ADORA Nano 桌面平台</li>
+        </ul>
+      </div>
+      <div class="rm-col">
+        <div class="phase">Mid Term</div><h3>中期</h3>
+        <ul>
+          <li>大脑 + 神经 + 身体全栈打通</li>
+          <li>为不同机体定制大脑 / 神经</li>
+          <li>技能库 + Node Hub</li>
+          <li>教学套件进高校</li>
+        </ul>
+      </div>
+      <div class="rm-col">
+        <div class="phase">Long Term</div><h3>远期</h3>
+        <ul>
+          <li>全栈开源机器人标准（大脑 / 神经 / 身体）</li>
+          <li>多机体生态</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section dark cta-band" style="padding-top:0">
+  <div class="wrap reveal">
+    <h2 class="h1">想在你的机器人上试试？</h2>
+    <p class="lead">Octos + DORA 可以适配到你现有的本体与算力平台。</p>
+    <div class="btn-row"><a class="btn btn-primary" href="contact.html">预约技术交流<svg><use href="#i-arrow"/></svg></a><a class="btn btn-ghost" href="community.html#projects">浏览开源项目</a></div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="index.html"><svg class="brand-mark" viewBox="0 0 36 36" aria-hidden="true"><rect width="36" height="36" rx="9" fill="#008E88"/><path d="M26.4 14.2A9 9 0 1 0 27 20" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><path d="M27.6 9.2v5.6H22" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="18" r="3.4" fill="#fff"/></svg><span class="brand-text"><strong>循驭智能</strong><span>RECURGENCE.AI</span></span></a>
+        <p>全栈开源机器人平台。从模型、智能体到执行系统，把开源能力变成客户可用的机器人。</p>
+      </div>
+      <div><h4>产品</h4><ul>
+        <li><a href="products.html#adora-1-nano">ADORA 1 Nano</a></li>
+        <li><a href="products.html#adora-2-mini">ADORA 2 Mini</a></li>
+        <li><a href="products.html#adora-2-pro">ADORA 2 Pro</a></li>
+        <li><a href="products.html#adora-1-pro">ADORA 1 Pro</a></li>
+        <li><a href="products.html#adora-2-max">ADORA 2 Max</a></li>
+        <li><a href="products.html#dora-pai">DORA-PAI</a></li>
+      </ul></div>
+      <div><h4>技术</h4><ul>
+        <li><a href="technology.html#octos">Octos 智能体运行时</a></li>
+        <li><a href="technology.html#dora">DORA 数据流内核</a></li>
+        <li><a href="technology.html#phyworld">PhyWorld 世界模型</a></li>
+        <li><a href="technology.html#nexus">Nexus 仿真与数据</a></li>
+        <li><a href="technology.html#roadmap">技术路线</a></li>
+      </ul></div>
+      <div><h4>解决方案</h4><ul>
+        <li><a href="solutions.html#academic">高校与科研</a></li>
+        <li><a href="solutions.html#oem">本体厂商与集成商</a></li>
+        <li><a href="solutions.html#industry">产业应用</a></li>
+        <li><a href="solutions.html#why">为什么选择循驭</a></li>
+      </ul></div>
+      <div><h4>开源社区</h4><ul>
+        <li><a href="community.html#projects">开源项目</a></li>
+        <li><a href="community.html#events">赛事与活动</a></li>
+        <li><a href="community.html#news">新闻动态</a></li>
+        <li><a href="https://github.com/dora-rs" target="_blank" rel="noopener">GitHub · dora-rs</a></li>
+        <li><a href="https://gitee.com/dora-rs/dora" target="_blank" rel="noopener">Gitee 镜像</a></li>
+        <li><a href="https://doracc.com" target="_blank" rel="noopener">DORA 中文社区</a></li>
+        <li><a href="https://huggingface.co/NU-World-Model-Embodied-AI" target="_blank" rel="noopener">Hugging Face</a></li>
+      </ul></div>
+      <div><h4>公司</h4><ul>
+        <li><a href="about.html">关于我们</a></li>
+        <li><a href="about.html#team">团队</a></li>
+        <li><a href="about.html#careers">加入我们</a></li>
+        <li><a href="contact.html">联系我们</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div>© <span data-year>2026</span> 杭州循驭智能科技有限公司 · 浙江省杭州市余杭区
+        </div>
+      <nav><a href="privacy.html">隐私政策</a><a href="terms.html">使用条款</a><a href="contact.html">商务合作</a></nav>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js" defer></script>
+</body>
+</html>
