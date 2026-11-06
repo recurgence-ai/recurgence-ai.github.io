@@ -48,9 +48,17 @@
   }
 
   // 生态滚动条：复制一份轨道内容实现无缝循环
+  // 走马灯：先把条目铺满一屏宽，再整体复制一份，translateX(-50%) 正好无缝衔接；速度按宽度统一
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.querySelectorAll(".marquee-track").forEach((track) => {
-    track.innerHTML += track.innerHTML;
-    [...track.children].slice(track.children.length / 2).forEach((c) => c.setAttribute("aria-hidden", "true"));
+    if (still) return;
+    const items = [...track.children];
+    const clone = (c) => { const n = c.cloneNode(true); n.setAttribute("aria-hidden", "true"); return n; };
+    const need = Math.max(track.parentElement.clientWidth, window.screen ? screen.width : 0);
+    for (let i = 0; track.scrollWidth < need && i < 12; i++) items.forEach((c) => track.appendChild(clone(c)));
+    const half = track.scrollWidth;
+    [...track.children].forEach((c) => track.appendChild(clone(c)));
+    track.style.animationDuration = Math.round(half / 38) + "s";
   });
 
   // 草稿模式开关（只影响本机预览；上线前删除 body 上的 draft / has-draft 类）
